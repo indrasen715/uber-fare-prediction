@@ -32,6 +32,7 @@ It contains **synthetic NYC Uber trips** for safe, public machine learning use.
 
 ## Project Structure
 
+```php 
 ├── training-data/
 │ └── uber.csv # Synthetic dataset (20,000+ rows)
 ├── train_uber.py # Training script (feature engineering + model training)
@@ -40,7 +41,7 @@ It contains **synthetic NYC Uber trips** for safe, public machine learning use.
 ├── requirements.txt # Python dependencies
 ├── README.md # Project documentation
 
-
+```
 ---
 
 ## 🚀 Getting Started
