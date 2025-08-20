@@ -1,6 +1,6 @@
-# ----------------------
+
 # Import libraries
-# ----------------------
+
 import pandas as pd
 import joblib
 from fastapi import FastAPI
@@ -9,14 +9,14 @@ import numpy as np
 import pytz
 from train_uber import load_and_train, MODEL_PATH   # Reuse training code
 
-# ----------------------
-# FastAPI app
-# ----------------------
-app = FastAPI(title="🚖 Uber Fare Prediction API")
 
-# ----------------------
+# FastAPI app
+
+app = FastAPI(title=" Uber Fare Prediction API")
+
+
 # Utility: Haversine distance
-# ----------------------
+
 def haversine_distance(lat1, lon1, lat2, lon2):
     R = 6371  # Earth radius in km
     lat1, lon1, lat2, lon2 = map(np.radians, [lat1, lon1, lat2, lon2])
@@ -25,23 +25,23 @@ def haversine_distance(lat1, lon1, lat2, lon2):
     a = np.sin(dlat / 2) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2) ** 2
     return R * 2 * np.arcsin(np.sqrt(a))
 
-# ----------------------
+
 # Load model at startup
-# ----------------------
+
 @app.on_event("startup")
 def load_model():
     global model
     try:
         model = joblib.load(MODEL_PATH)
-        print("✅ Model loaded from disk")
+        print(" Model loaded from disk")
     except:
-        print("⚠️ Model not found, training a new one...")
+        print("Model not found, training a new one...")
         load_and_train()
         model = joblib.load(MODEL_PATH)
 
-# ----------------------
+
 # Root endpoint
-# ----------------------
+
 @app.get("/")
 def home():
     return {
@@ -53,9 +53,9 @@ def home():
         "example_pickup_datetime": "2025-08-20 05:20:00"
     }
 
-# ----------------------
+
 # Prediction endpoint
-# ----------------------
+
 @app.get("/predict")
 def predict_fare(
     pickup_longitude: float,

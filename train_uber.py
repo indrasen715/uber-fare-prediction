@@ -35,15 +35,15 @@ def haversine_distance(lat1, lon1, lat2, lon2):
 def load_and_train():
     """Load dataset, engineer features, train Random Forest, evaluate, and save."""
 
-    # Step 1: Load dataset
+# Step 1: Load dataset
     print("Loading dataset...")
     df = pd.read_csv(DATASET_PATH)
 
-    # Step 2: Clean dataset
-    df = df.dropna()
+# Step 2: Clean dataset
+    df = df.dropna() # Remove missing rows.
     df = df[(df["fare_amount"] > 0) & (df["fare_amount"] < 200)]
 
-    # Step 3: Feature Engineering
+# Step 3: Feature Engineering
     
     # If distance_km column is not in data → calculate
     if "distance_km" not in df.columns:
@@ -52,6 +52,8 @@ def load_and_train():
             df["dropoff_latitude"], df["dropoff_longitude"]
         )
 
+    # Remove trips shorter than 100 meters or longer than 100 km (not realistic for NYC Uber).
+    
     df = df[(df["distance_km"] > 0.1) & (df["distance_km"] < 100)]
 
     # Ensure datetime is parsed
@@ -74,7 +76,7 @@ def load_and_train():
     if "month" not in df.columns:
         df["month"] = df["pickup_datetime"].dt.month
 
-    # Step 4: Select Features & Target
+# Step 4: Select Features & Target
     feature_cols = [
         "pickup_longitude",
         "pickup_latitude",
@@ -87,30 +89,33 @@ def load_and_train():
         "month"
     ]
 
-    X = df[feature_cols]
-    y = df["fare_amount"]
+    X = df[feature_cols] #inputs (what we know about the trip).
+    y = df["fare_amount"] #output (the Uber fare, what we want to predict).
 
-    # Step 5: Train-test split
+# Step 5: Train-test split 
+
+    #Training set (X_train, y_train): used to teach the model. 
+    #Testing set (X_test, y_test): used to check how well the model performs on new/unseen data.
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
 
-    # Step 6: Train model
+# Step 6: Train model
     print("Training model...")
     model = RandomForestRegressor(
         n_estimators=200,
         max_depth=20,
         random_state=42,
-        n_jobs=-1
+        n_jobs=-1 # use all available CPU cores
     )
     model.fit(X_train, y_train)
 
-    # Step 7: Evaluate
+# Step 7: Evaluate
     y_pred = model.predict(X_test)
     mae = mean_absolute_error(y_test, y_pred)
     print(f"Model trained! MAE: {mae:.2f} USD")
 
-    # Step 8: Save model
+# Step 8: Save model
     joblib.dump(model, MODEL_PATH)
     print(f"Model saved to {MODEL_PATH}")
 

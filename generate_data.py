@@ -8,7 +8,8 @@ from datetime import datetime, timedelta
 import pytz
 import math
 
-# NYC bounding box (approx)
+# This sets approximate latitude/longitude limits around New York City.
+
 NYC_BOUNDS = {
     "lat_min": 40.55,
     "lat_max": 40.95,
@@ -16,7 +17,7 @@ NYC_BOUNDS = {
     "lon_max": -73.70
 }
 
-# Fare constants
+# Uber Fare constants
 BASE_FARE = 7.19
 PER_MINUTE = 0.88
 PER_MILE = 1.65
@@ -30,7 +31,7 @@ eastern = pytz.timezone("US/Eastern")
 
 
 def haversine(lon1, lat1, lon2, lat2):
-    """Calculate great-circle distance between two points (in km)."""
+    """Calculate shortest distance between two points on a sphere (like Earth) using their latitude and longitude. (in km)."""
     R = 6371  # Earth radius in km
     lon1, lat1, lon2, lat2 = map(np.radians, [lon1, lat1, lon2, lat2])
     dlon = lon2 - lon1
